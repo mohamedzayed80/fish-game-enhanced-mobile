@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ fishi's cutness ✨</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d5016 50%, #0f0f0f 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            touch-action: manipulation; /* Prevent browser gestures */
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4ade80, #22c55e, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(74, 222, 128, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #e5e7eb;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.2rem;
+            color: #4ade80;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #4ade80;
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(74, 222, 128, 0.3);
+            border-color: #22c55e;
+        }
+
+        .card-title {
+            font-size: 1.8rem;
+            color: #4ade80;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .card-text {
+            color: #e5e7eb;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .game-section {
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px solid #4ade80;
+            border-radius: 25px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(74, 222, 128, 0.3);
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            color: #4ade80;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .game-area {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            max-width: 90vw;
+            margin: 30px auto;
+            border: 3px solid #4ade80;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.2);
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+            touch-action: none; /* Disable browser touch gestures */
+        }
+
+        .basket {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4rem;
+            z-index: 10;
+            transition: left 0.1s ease;
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.8));
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
+        }
+
+        .falling-item {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: fall linear;
+            z-index: 5;
+            filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.6));
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* Prevent touch events on falling items */
+        }
+
+        .game-instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #4ade80;
+            z-index: 15;
+        }
+
+        .game-instructions p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+        }
+
+        @keyframes fall {
+            from {
+                top: -50px;
+                transform: rotate(0deg);
+            }
+            to {
+                top: 420px;
+                transform: rotate(360deg);
+            }
+        }
+
+        .catch-effect {
+            position: absolute;
+            font-size: 2rem;
+            color: #4ade80;
+            font-weight: bold;
+            animation: catchPop 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        @keyframes catchPop {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) translateY(-50px);
+                opacity: 0;
+            }
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat {
+            background: rgba(74, 222, 128, 0.1);
+            padding: 15px 25px;
+            border-radius: 15px;
+            border: 2px solid #4ade80;
+            min-width: 120px;
+        }
+
+        .stat-label {
+            color: #4ade80;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .reset-btn {
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(74, 222, 128, 0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(74, 222, 128, 0.4);
+        }
+
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(74, 222, 128, 0.6);
+            font-size: 20px;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .congratulations {
+            margin-top: 20px;
+            padding: 20px;
+            background: linear-gradient(45deg, rgba(74, 222, 128, 0.2), rgba(34, 197, 94, 0.2));
+            border: 2px solid #4ade80;
+            border-radius: 15px;
+            color: #4ade80;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: none;
+        }
+
+        /* Touch controls for mobile */
+        .touch-controls {
+            display: none;
+            justify-content: space-between;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .touch-btn {
+            background: rgba(74, 222, 128, 0.2);
+            border: 2px solid #4ade80;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #4ade80;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .content-grid { grid-template-columns: 1fr; }
+            .game-stats { flex-direction: column; align-items: center; }
+            .touch-controls { display: flex; }
+            .game-instructions p { font-size: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .main-title { font-size: 2rem; }
+            .game-title { font-size: 1.8rem; }
+            .game-area { height: 300px; }
+            .basket { font-size: 3rem; }
+            .falling-item { font-size: 2rem; }
+            .touch-btn { width: 60px; height: 60px; font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="floating-hearts"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="main-title">✨ fishi ✨</h1>
+            <p class="subtitle">Pretty, cute & smartass </p>
+            <p class="description">Everyone is so proud of you, fish, youre doing more than enough, youre loved and appreciated, , ur doing so well, and u will only keep getting better</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h2 class="card-title">🌟 prettiest ever </h2>
+                <p class="card-text">fishass has the most most stunning look ever , she too pretty she can win Mrs. India without even showing up </p>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">💚 Everyone is proud of u</h2>
+                <p class="card-text">Lishi is truly special(retarded) and everyone around her feels so proud and lucky to know such an cuteass person.  </p>
+            </div>
+        </div>
+
+        <div class="game-section">
+            <h2 class="game-title"> FIshy game</h2>
+            <p style="color: #e5e7eb; margin-bottom: 20px;">Catch all the items falling from above! Use arrow keys, mouse, or touch controls!</p>
+            
+            <div class="game-stats">
+                <div class="stat">
+                    <div class="stat-label">Caught</div>
+                    <div class="stat-value" id="caught">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Missed</div>
+                    <div class="stat-value" id="missed">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Score</div>
+                    <div class="stat-value" id="score">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Level</div>
+                    <div class="stat-value" id="level">1</div>
+                </div>
+            </div>
+
+            <div class="game-area" id="gameArea">
+                <div class="basket" id="basket">👜</div>
+                <div class="game-instructions">
+                    <p id="instructionsText">Use ← → arrow keys or mouse to move the basket!</p>
+                    <button class="start-btn" id="startBtn" onclick="startGame()">Start Game ✨</button>
+                </div>
+            </div>
+            
+            <!-- Touch controls for mobile -->
+            <div class="touch-controls">
+                <div class="touch-btn" id="leftBtn">←</div>
+                <div class="touch-btn" id="rightBtn">→</div>
+            </div>
+            
+            <button class="reset-btn" onclick="resetGame()" style="margin-top: 20px;">Reset Game 🔄</button>
+            
+            <div class="congratulations" id="congratulations">
+             good catch, fish Your fashion collection is fabulous!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        const fashionItems = ['👠', '👜', '👑', '💍', '👒', '💚', '🖤', '💄', '💎', '🌿', '👗', '🥿'];
+        let gameActive = false;
+        let basketPosition = 50; // percentage
+        let caught = 0;
+        let missed = 0;
+        let score = 0;
+        let level = 1;
+        let gameSpeed = 3000; // milliseconds between items
+        let fallSpeed = 4; // seconds to fall
+        let gameInterval;
+        let fallingItems = [];
+        let mouseX = 0;
+        let useMouseControl = false;
+        let isTouchDevice = false;
+
+        // Check if device is touch-enabled
+        function checkTouchDevice() {
+            return (('ontouchstart' in window) ||
+                (navigator.maxTouchPoints > 0) ||
+                (navigator.msMaxTouchPoints > 0));
+        }
+
+        // Initialize stars
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            for (let i = 0; i < 50; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Initialize floating hearts
+        function createFloatingHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = '💚';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                document.querySelector('.floating-hearts').appendChild(heart);
+                
+                setTimeout(() => {
+                    heart.remove();
+                }, 7000);
+            }, 2000);
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (!gameActive) return;
+            
+            if (e.key === 'ArrowLeft') {
+                basketPosition = Math.max(5, basketPosition - 8);
+                updateBasketPosition();
+            } else if (e.key === 'ArrowRight') {
+                basketPosition = Math.min(95, basketPosition + 8);
+                updateBasketPosition();
+            }
+        });
+
+        // Mouse controls
+        document.getElementById('gameArea').addEventListener('mousemove', (e) => {
+            if (!gameActive) return;
+            
+            const gameArea = document.getElementById('gameArea');
+            const rect = gameArea.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const percentage = (x / rect.width) * 100;
+            
+            basketPosition = Math.max(5, Math.min(95, percentage));
+            updateBasketPosition();
+            useMouseControl = true;
+        });
+
+        // Touch controls
+        function setupTouchControls() {
+            const gameArea = document.getElementById('gameArea');
+            
+            // Touch move on game area
+            gameArea.addEventListener('touchmove', (e) => {
+                if (!gameActive) return;
+                
+                e.preventDefault(); // Prevent scrolling
+                const touch = e.touches[0];
+                const rect = gameArea.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                
+                basketPosition = Math.max(5, Math.min(95, percentage));
+                updateBasketPosition();
+            }, { passive: false });
+            
+            // Touch start on game area
+            gameArea.addEventListener('touchstart', (e) => {
+                if (!gameActive) return;
+                
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = gameArea.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const percentage = (x / rect.width) * 100;
+                
+                basketPosition = Math.max(5, Math.min(95, percentage));
+                updateBasketPosition();
+            }, { passive: false });
+            
+            // Touch buttons for left/right movement
+            const leftBtn = document.getElementById('leftBtn');
+            const rightBtn = document.getElementById('rightBtn');
+            
+            // Left button touch events
+            leftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!gameActive) return;
+                
+                moveLeft();
+                // Keep moving while button is held
+                leftBtn.interval = setInterval(moveLeft, 100);
+            });
+            
+            leftBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                clearInterval(leftBtn.interval);
+            });
+            
+            leftBtn.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                clearInterval(leftBtn.interval);
+            });
+            
+            // Right button touch events
+            rightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (!gameActive) return;
+                
+                moveRight();
+                // Keep moving while button is held
+                rightBtn.interval = setInterval(moveRight, 100);
+            });
+            
+            rightBtn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                clearInterval(rightBtn.interval);
+            });
+            
+            rightBtn.addEventListener('touchcancel', (e) => {
+                e.preventDefault();
+                clearInterval(rightBtn.interval);
+            });
+            
+            // Update instructions for touch devices
+            document.getElementById('instructionsText').textContent = 
+                "Touch and drag on the game area or use the buttons below to move the basket!";
+        }
+        
+        function moveLeft() {
+            if (!gameActive) return;
+            basketPosition = Math.max(5, basketPosition - 8);
+            updateBasketPosition();
+        }
+        
+        function moveRight() {
+            if (!gameActive) return;
+            basketPosition = Math.min(95, basketPosition + 8);
+            updateBasketPosition();
+        }
+
+        function updateBasketPosition() {
+            const basket = document.getElementById('basket');
+            basket.style.left = basketPosition + '%';
+        }
+
+        function createFallingItem() {
+            const gameArea = document.getElementById('gameArea');
+            const item = document.createElement('div');
+            item.className = 'falling-item';
+            item.innerHTML = fashionItems[Math.floor(Math.random() * fashionItems.length)];
+            item.style.left = Math.random() * 85 + 5 + '%';
+            item.style.animationDuration = fallSpeed + 's';
+            
+            gameArea.appendChild(item);
+            fallingItems.push(item);
+
+            // Check for catches
+            const catchInterval = setInterval(() => {
+                const itemRect = item.getBoundingClientRect();
+                const basketRect = document.getElementById('basket').getBoundingClientRect();
+                
+                if (itemRect.bottom >= basketRect.top && 
+                    itemRect.left < basketRect.right && 
+                    itemRect.right > basketRect.left &&
+                    itemRect.bottom < basketRect.bottom + 50) {
+                    // Caught!
+                    clearInterval(catchInterval);
+                    caught++;
+                    score += level * 10;
+                    
+                    // Create catch effect
+                    createCatchEffect(basketRect.left + basketRect.width / 2, basketRect.top);
+                    
+                    item.remove();
+                    fallingItems = fallingItems.filter(i => i !== item);
+                    updateStats();
+                    checkLevelUp();
+                }
+            }, 50);
+
+            // Remove item when it falls off screen
+            setTimeout(() => {
+                if (document.body.contains(item)) {
+                    missed++;
+                    item.remove();
+                    fallingItems = fallingItems.filter(i => i !== item);
+                    updateStats();
+                }
+                clearInterval(catchInterval);
+            }, fallSpeed * 1000 + 500);
+        }
+
+        function createCatchEffect(x, y) {
+            const effect = document.createElement('div');
+            effect.className = 'catch-effect';
+            effect.innerHTML = '+' + (level * 10);
+            effect.style.position = 'fixed';
+            effect.style.left = x + 'px';
+            effect.style.top = y + 'px';
+            effect.style.transform = 'translateX(-50%)';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 1000);
+        }
+
+        function updateStats() {
+            document.getElementById('caught').textContent = caught;
+            document.getElementById('missed').textContent = missed;
+            document.getElementById('score').textContent = score;
+            document.getElementById('level').textContent = level;
+        }
+
+        function checkLevelUp() {
+            const newLevel = Math.floor(caught / 10) + 1;
+            if (newLevel > level) {
+                level = newLevel;
+                gameSpeed = Math.max(1000, gameSpeed - 300); // Faster spawning
+                fallSpeed = Math.max(2, fallSpeed - 0.3); // Faster falling
+                
+                // Show level up celebration
+                createLevelUpEffect();
+                
+                // Restart the game interval with new speed
+                clearInterval(gameInterval);
+                gameInterval = setInterval(createFallingItem, gameSpeed);
+            }
+        }
+
+        function createLevelUpEffect() {
+            const celebration = document.createElement('div');
+            celebration.style.position = 'fixed';
+            celebration.style.top = '50%';
+            celebration.style.left = '50%';
+            celebration.style.transform = 'translate(-50%, -50%)';
+            celebration.style.fontSize = '3rem';
+            celebration.style.color = '#4ade80';
+            celebration.style.fontWeight = 'bold';
+            celebration.style.zIndex = '1000';
+            celebration.style.pointerEvents = 'none';
+            celebration.innerHTML = `Level ${level}! 🌟`;
+            celebration.style.animation = 'catchPop 2s ease-out forwards';
+            document.body.appendChild(celebration);
+            
+            setTimeout(() => celebration.remove(), 2000);
+        }
+
+        function startGame() {
+            gameActive = true;
+            document.querySelector('.game-instructions').style.display = 'none';
+            
+            // Reset position
+            basketPosition = 50;
+            updateBasketPosition();
+            
+            // Start spawning items
+            gameInterval = setInterval(createFallingItem, gameSpeed);
+            
+            if (caught >= 30) {
+                setTimeout(() => {
+                    document.getElementById('congratulations').style.display = 'block';
+                }, 1000);
+            }
+        }
+
+        function resetGame() {
+            gameActive = false;
+            clearInterval(gameInterval);
+            
+            // Clear falling items
+            fallingItems.forEach(item => item.remove());
+            fallingItems = [];
+            
+            // Reset stats
+            caught = 0;
+            missed = 0;
+            score = 0;
+            level = 1;
+            gameSpeed = 3000;
+            fallSpeed = 4;
+            basketPosition = 50;
+            
+            updateStats();
+            updateBasketPosition();
+            
+            document.querySelector('.game-instructions').style.display = 'block';
+            document.getElementById('congratulations').style.display = 'none';
+        }
+
+        function createCelebration() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.style.position = 'fixed';
+                    celebration.style.left = Math.random() * 100 + '%';
+                    celebration.style.top = Math.random() * 100 + '%';
+                    celebration.style.fontSize = '2rem';
+                    celebration.style.zIndex = '1000';
+                    celebration.style.pointerEvents = 'none';
+                    celebration.innerHTML = fashionItems[Math.floor(Math.random() * fashionItems.length)];
+                    celebration.style.animation = 'float 3s ease-out forwards';
+                    document.body.appendChild(celebration);
+                    
+                    setTimeout(() => celebration.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // Initialize everything
+        window.onload = function() {
+            createStars();
+            createFloatingHearts();
+            updateStats();
+            
+            // Check if it's a touch device and set up touch controls
+            isTouchDevice = checkTouchDevice();
+            if (isTouchDevice) {
+                setupTouchControls();
+            }
+        };
+    </script>
+</body>
+</html>
